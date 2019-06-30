@@ -17,6 +17,7 @@ class CreateOrdersTable extends Migration
             $table->bigIncrements('id');
             $table->string('phone');
             $table->boolean('status');
+            $table->string('number');
             $table->integer('product_id');
             $table->softDeletes();
             $table->timestamps();

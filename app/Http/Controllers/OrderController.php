@@ -37,7 +37,6 @@ class OrderController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'phone' => 'required',
-            'status' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -50,9 +49,19 @@ class OrderController extends Controller
             return response()->json(['message' => 'product not found', 'status' => false], 404);
         }
 
+        //  $hashedPassword = app('hash')->make($plainPassword);
+        $lastOrder = Order::orderBy('created_at', 'desc')->first();
+        if (!$lastOrder)
+            $number = 0;
+        else
+            $number = substr($lastOrder->member_id, 3);
+
+        $orderId = 'NEAT' . sprintf('%05d', intval($number) + 1) . 'LUX';
+
         $order = new Order();
         $order->phone = $request->input('phone');
-        $order->status = $request->input('status');
+        $order->number = $orderId;
+        $order->status = true;
 
         $product->orders()->save($order);
 
